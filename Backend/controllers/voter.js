@@ -102,7 +102,7 @@ const handleRegisterInElection = async (req, res) => {
 
     res
       .status(200)
-      .json({ message: "voter successfuly register in voting election" });
+      .json({ message: "voter successfuly register in voting election",success:true });
     await session.commitTransaction();
   } catch (error) {
     await session.abortTransaction();
@@ -152,8 +152,7 @@ const handleVote = async (req, res) => {
   session.startTransaction();
   try {
     const { aadharNumber } = req.voter;
-    const { candidateName, candidateAadharNumber, PartiesName } = req.body;
-    const { _id: electionId } = req.params;
+    const { candidateName, candidateAadharNumber, PartiesName,electionId } = req.body;
     if (
       !aadharNumber ||
       !candidateName ||
@@ -220,7 +219,7 @@ const handleVote = async (req, res) => {
       );
       res
         .status(200)
-        .json({ message: "you have successfuly vote to " + candidateName });
+        .json({ message: `you have successfuly vote to ${PartiesName} (${candidateName}) `,success:true});
     } else {
       res.status(200).json({ message: " vote has expired" });
     }
@@ -235,9 +234,28 @@ const handleVote = async (req, res) => {
     session.endSession();
   }
 };
+const handleShowTodayVote=async(req,res)=>{
+  try{
+    const today=new Date();
+    today.setHours(0,0,0,0)
+    const endDay=new Date()
+    endDay.setHours(23, 59, 59, 999);
+    const { aadharNumber } = req.voter;
+    const data=await Election.find({dateOfVotiong: {
+      $gte: today,
+      $lte: endDay}}).where("voter.aadharNumber").equals(aadharNumber).select("candidate resultDate  type description name _id ")
+      return res.status(200).json({data})
+  }catch(error){
+    console.log("error from voter handleShowTodayVote ", error);
+    return res
+    .status(500)
+    .json({ message: "something worng try aganin later" });
+  }
+}
 module.exports = {
   handleAddNewVoter,
   handleRegisterInElection,
   handleVoterLogin,
   handleVote,
+  handleShowTodayVote,
 };

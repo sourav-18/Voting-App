@@ -4,6 +4,7 @@ const app = express();
 const voterRouter=require("./routes/voter")
 const candidateRouter=require("./routes/candidate")
 const electionRoute=require("./routes/election")
+const adminRoute=require("./routes/admin")
 
 // inbuild middleware
 app.use(express.json())
@@ -12,6 +13,7 @@ app.use(express.json())
 app.use("/voter",voterRouter)
 app.use("/candidate",candidateRouter)
 app.use("/election",electionRoute)
+app.use('/admin',adminRoute);
 
 //mongodb connction
 const mongoose = require("mongoose");

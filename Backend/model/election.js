@@ -12,7 +12,7 @@ const electionSchema=new mongoose.Schema({
             type:[{aadharNumber:String,voterName:String,time:Number,isVoteDone:{type:Boolean,default:false}}],
         },
         candidate:{
-            type:[{aadharNumber:String,candidateName:String,time:Number,totalGetVote:{type:Number,default:0}}],
+            type:[{aadharNumber:String,candidateName:String,partiesName:String,time:Number,totalGetVote:{type:Number,default:0}}],
         },
         type:{
             type:String,
@@ -39,6 +39,10 @@ const electionSchema=new mongoose.Schema({
         },
         finalResult:{
             type:{isCalculate:{type:Boolean,default:false},candidate:Object,totalVote:Number,totalRegisterVoter:Number,totalRegisterCandidate:Number,TotalunattemptedVoter:Number,WinCanidate:Object}
+        },
+        isEdit:{
+            type:Boolean,
+            default:false,
         },
         resultCalculat:{type:Boolean,default:false}
 },{timestamps:true})
